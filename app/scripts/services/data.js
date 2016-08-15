@@ -10,9 +10,14 @@ angular.module('todoListApp')
 		.then(callback)
 	};
 
-	this.deleteTodo = function(todo){
-		console.log("The " + todo.name + " todo has been deleted!");
-	};
+	this.deleteTodo = function(todo) {
+    if (!todo._id) {
+      return $q.resolve();
+    }
+    return $http.delete('/api/todos/' + todo._id).then(function() {
+      console.log("I deleted the " + todo.name + " todo!");
+    });
+  };
 
 	this.saveTodos = function(todos){
 		var queue = [];
@@ -32,6 +37,7 @@ angular.module('todoListApp')
 			console.log("I saved " + todos.length + " todos!");
 		});
 	};
+
 
 
 

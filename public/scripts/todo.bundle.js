@@ -26,8 +26,11 @@ webpackJsonp([0],[
 
 	angular.module('todoListApp')
 
-	.controller('mainCtrl', function($scope, dataService){
+	.controller('mainCtrl', function($scope, $log, $interval, dataService){
 		
+		
+
+
 		$scope.addTodo = function(){
 			var todo = {name: "This is a new todo."};
 			$scope.todos.unshift(todo);
@@ -41,6 +44,7 @@ webpackJsonp([0],[
 		$scope.deleteTodo = function(todo, $index){
 			dataService.deleteTodo(todo);
 			$scope.todos.splice($index, 1);
+			return todo;
 		};
 
 		$scope.saveTodos = function(){
@@ -49,7 +53,7 @@ webpackJsonp([0],[
 					return todo
 				};
 			})
-			dataService.saveTodos(filteredTodos);
+			dataService.saveTodos(filteredTodos).finally($scope.resetTodoState());
 		};
 		$scope.resetTodoState = function(){
 			$scope.todos.forEach(function(todo){
@@ -91,9 +95,14 @@ webpackJsonp([0],[
 			.then(callback)
 		};
 
-		this.deleteTodo = function(todo){
-			console.log("The " + todo.name + " todo has been deleted!");
-		};
+		this.deleteTodo = function(todo) {
+	    if (!todo._id) {
+	      return $q.resolve();
+	    }
+	    return $http.delete('/api/todos/' + todo._id).then(function() {
+	      console.log("I deleted the " + todo.name + " todo!");
+	    });
+	  };
 
 		this.saveTodos = function(todos){
 			var queue = [];
@@ -113,6 +122,7 @@ webpackJsonp([0],[
 				console.log("I saved " + todos.length + " todos!");
 			});
 		};
+
 
 
 

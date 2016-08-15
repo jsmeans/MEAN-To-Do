@@ -6,6 +6,9 @@ angular.module('todoListApp')
 
 .controller('mainCtrl', function($scope, $log, $interval, dataService){
 	
+	
+
+
 	$scope.addTodo = function(){
 		var todo = {name: "This is a new todo."};
 		$scope.todos.unshift(todo);
@@ -19,6 +22,7 @@ angular.module('todoListApp')
 	$scope.deleteTodo = function(todo, $index){
 		dataService.deleteTodo(todo);
 		$scope.todos.splice($index, 1);
+		return todo;
 	};
 
 	$scope.saveTodos = function(){
@@ -27,7 +31,7 @@ angular.module('todoListApp')
 				return todo
 			};
 		})
-		dataService.saveTodos(filteredTodos);
+		dataService.saveTodos(filteredTodos).finally($scope.resetTodoState());
 	};
 	$scope.resetTodoState = function(){
 		$scope.todos.forEach(function(todo){
