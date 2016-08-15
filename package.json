@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "angular": "^1.5.8",
+    "body-parser": "1.15.2",
+    "mongoose": "4.5.8",
     "webpack": "^1.13.1"
   }
 }
